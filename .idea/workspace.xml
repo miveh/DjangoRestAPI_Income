@@ -2,10 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="009a908b-691a-4e94-93df-d09c2a760f87" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Income_calculation_partizaans/base_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Income_calculation_partizaans/exceptions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/income/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/income/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/income/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/income/models.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/income/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Income_calculation_partizaans/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Income_calculation_partizaans/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/income/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/income/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/income/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/income/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +80,7 @@
       <option name="presentableId" value="Default" />
       <updated>1639640399613</updated>
       <workItem from="1639640493899" duration="7492000" />
-      <workItem from="1639721667965" duration="14123000" />
+      <workItem from="1639721667965" duration="19205000" />
     </task>
     <servers />
   </component>
