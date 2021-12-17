@@ -1,5 +1,10 @@
+import datetime
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import F
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from Income_calculation_partizaans.base_manager import BaseManager
 
 
 class Courier(models.Model):
@@ -14,18 +19,6 @@ class Courier(models.Model):
         db_table = 'Courier'
 
 
-class Trip(models.Model):
-    """
-    Trip information
-    """
-
-    id = models.AutoField(db_column='ID', primary_key=True)
-    courier = models.ForeignKey(Courier, db_column='Courier', on_delete=models.CASCADE)
-
-    class Meta:
-        db_table = 'Trip'
-
-
 class Income(models.Model):
     """
     Income a trip
@@ -33,7 +26,7 @@ class Income(models.Model):
 
     id = models.AutoField(db_column='ID', primary_key=True)
     amount = models.BigIntegerField(db_column='Amount', validators=[MinValueValidator(0)])
-    trip = models.OneToOneField(Trip, db_column='TripID', on_delete=models.CASCADE)
+    courier = models.ForeignKey(Courier, db_column='CourierID', on_delete=models.CASCADE)
     insert_date = models.DateTimeField(db_column='InsertDate', auto_now_add=True)
 
     class Meta:
@@ -48,7 +41,7 @@ class IncreaseIncome(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)
     amount = models.BigIntegerField(db_column='Amount')
     courier = models.ForeignKey(Courier, db_column='CourierID', on_delete=models.CASCADE)
-    insert_date = models.DateTimeField(db_column='InsertDate', auto_now_add=True)
+    insert_date = models.DateField(db_column='InsertDate', auto_now_add=True)
 
     class Meta:
         db_table = 'IncreaseIncome'
@@ -62,7 +55,7 @@ class DeductionIncome(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)
     amount = models.BigIntegerField(db_column='Amount')
     courier = models.ForeignKey(Courier, db_column='CourierID', on_delete=models.CASCADE)
-    insert_date = models.DateTimeField(db_column='InsertDate', auto_now_add=True)
+    insert_date = models.DateField(db_column='InsertDate', auto_now_add=True)
 
     class Meta:
         db_table = 'DeductionIncome'
@@ -76,7 +69,9 @@ class DailyIncome(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)
     amount = models.BigIntegerField(db_column='Amount')
     courier = models.ForeignKey(Courier, db_column='CourierID', on_delete=models.CASCADE)
-    insert_date = models.DateTimeField(db_column='InsertDate', auto_now_add=True)
+    insert_date = models.DateField(db_column='InsertDate', auto_now_add=True)
+
+    objects = BaseManager()
 
     class Meta:
         db_table = 'DailyIncome'
@@ -95,3 +90,26 @@ class WeeklyIncome(models.Model):
     class Meta:
         db_table = 'WeeklyIncome'
 
+
+@receiver(post_save, sender=Income)
+def update_income(sender, instance, created, **kwargs):
+    if created:
+        obj, create = DailyIncome.objects.get_or_create(insert_date=datetime.date.today(), courier=instance.courier, defaults={'amount': 0})
+        obj.amount = F('amount') + instance.amount
+        obj.save(update_fields=['amount'])
+
+
+@receiver(post_save, sender=IncreaseIncome)
+def update_increase(sender, instance, created, **kwargs):
+    if created:
+        obj = DailyIncome.objects.get_or_raise(courier=instance.courier, insert_date=datetime.date.today())
+        obj.amount = F('amount') + instance.amount
+        obj.save(update_fields=['amount'])
+
+
+@receiver(post_save, sender=DeductionIncome)
+def update_deduction(sender, instance, created, **kwargs):
+    if created:
+        obj = DailyIncome.objects.get_or_raise(insert_date=datetime.date.today(), courier=instance.courier)
+        obj.amount = F('amount') - instance.amount
+        obj.save(update_fields=['amount'])
