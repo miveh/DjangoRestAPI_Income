@@ -1,3 +1,5 @@
+import datetime
+
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from rest_framework.generics import CreateAPIView, ListAPIView
 
@@ -50,9 +52,14 @@ class WeeklyIncomeListAPIView(ListAPIView):
     API for display list of weekly income
     """
     serializer_class = WeeklyIncomeSerializer
-    queryset = WeeklyIncome.objects.all()
-    # def get_queryset(self):
-    #     from_date, to_date = self.request.query_params.get('from_date'), self.request.query_params.get('to_date')
+    # queryset = WeeklyIncome.objects.all()
 
+    def get_queryset(self):
+        print(self.request.query_params.get('from_date'))
+        print(datetime.datetime.strptime(self.request.query_params.get('from_date'), '%Y-%m-%d'))
+
+        from_date, to_date = datetime.datetime.strptime(self.request.query_params.get('from_date'), '%Y-%m-%d'), \
+                             datetime.datetime.strptime(self.request.query_params.get('to_date'), '%Y-%m-%d')
+        return WeeklyIncome.objects.filter(insert_date__range=(from_date, to_date))
 
 
