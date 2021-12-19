@@ -85,7 +85,7 @@ class WeeklyIncome(models.Model):
     id = models.AutoField(db_column='ID', primary_key=True)
     amount = models.BigIntegerField(db_column='Amount')
     courier = models.ForeignKey(Courier, db_column='CourierID', on_delete=models.CASCADE)
-    insert_date = models.DateTimeField(db_column='InsertDate', auto_now_add=True)  # first day of week
+    insert_date = models.DateTimeField(db_column='InsertDate')  # first day of week
 
     class Meta:
         db_table = 'WeeklyIncome'

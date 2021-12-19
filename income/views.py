@@ -43,3 +43,5 @@ class DeductionIncomeAPIView(CreateAPIView):
     def perform_create(self, serializer):
         serializer.save(courier=Courier.objects.get(id=self.kwargs.get('id')))
         return serializer
+
+
