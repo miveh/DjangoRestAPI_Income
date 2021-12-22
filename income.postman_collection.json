@@ -378,6 +378,34 @@
 					"body": "{\n    \"amount\": 50\n}"
 				}
 			]
+		},
+		{
+			"name": "weekly income list",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{server1}}/weekly/?from_date=2021-12-10&to_date=2021-12-19",
+					"host": [
+						"{{server1}}"
+					],
+					"path": [
+						"weekly",
+						""
+					],
+					"query": [
+						{
+							"key": "from_date",
+							"value": "2021-12-10"
+						},
+						{
+							"key": "to_date",
+							"value": "2021-12-19"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
