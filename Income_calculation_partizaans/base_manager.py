@@ -1,5 +1,6 @@
 from django.db import models
-from .exceptions import *
+from rest_framework import status
+from rest_framework.exceptions import APIException
 
 
 class BaseManager(models.Manager):
@@ -8,4 +9,5 @@ class BaseManager(models.Manager):
         try:
             return queryset.get(*args, **kwargs)
         except queryset.model.DoesNotExist:
-            raise eval(queryset.model._meta.object_name + 'DoesNotExistException')
+            raise APIException(detail=f'{queryset.model} Does Not Exist', code=status.HTTP_404_NOT_FOUND)
+
